@@ -4,7 +4,6 @@ import { IReport } from "@/types/Report";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Cloud } from "lucide-react";
-import { formatDate } from "@/lib/utils";
 import ResortCard from "@/components/ResortCard";
 
 export default function Home() {
@@ -59,17 +58,17 @@ export default function Home() {
               <h1 className="text-xl font-bold text-foreground">
                 New England Epic Pass Mountains
               </h1>
-              <span className="text-xs text-gray-400">Updated {formatDate(reports.timestamp)}</span>
+              <span className="text-xs text-gray-400">Updated {reports.timestamp.toLocaleString()}</span>
             </div>
             <div>
               <button
-                className={`p-1 w-12 rounded-l-lg font-semibold cursor-pointer ${units === 'in' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                className={`p-1 w-12 rounded-l-lg font-semibold cursor-pointer ${units === 'in' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'}`}
                 onClick={() => setUnits("in")}
               >
                 in
               </button>
               <button
-                className={`p-1 w-12 rounded-r-lg font-semibold cursor-pointer ${units === 'cm' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                className={`p-1 w-12 rounded-r-lg font-semibold cursor-pointer ${units === 'cm' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'}`}
                 onClick={() => setUnits("cm")}
               >
                 cm
