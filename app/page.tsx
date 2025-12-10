@@ -1,65 +1,107 @@
-import Image from "next/image";
+"use client"
+
+import { IReport } from "@/types/Report";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Cloud } from "lucide-react";
+import { formatDate, calculatePercentage, deslugify } from "@/lib/utils";
+import ResortCard from "@/components/ResortCard";
 
 export default function Home() {
+  const [reports, setReports] = useState<IReport>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [units, setUnits] = useState<"in" | "cm">("in");
+
+  const weatherLinks = {
+    "stowe": "https://forecast.weather.gov/MapClick.php?lat=44.4653&lon=-72.6843",
+    "okemo": "https://forecast.weather.gov/MapClick.php?lat=43.3968&lon=-72.695",
+    "mount-snow": "https://forecast.weather.gov/MapClick.php?lat=42.9369&lon=-72.8091",
+    "mount-sunapee": "https://forecast.weather.gov/MapClick.php?lat=43.3212&lon=-72.0363",
+    "wildcat": "https://forecast.weather.gov/MapClick.php?lat=44.2889&lon=-71.1185",
+    "attitash": "https://forecast.weather.gov/MapClick.php?lat=44.0781&lon=-71.2822",
+    "crotched": "https://forecast.weather.gov/MapClick.php?lat=42.9877&lon=-71.8128",
+    "hunter": "https://forecast.weather.gov/MapClick.php?lat=42.2137&lon=-74.2193",
+  }
+
+  useEffect(() => {
+    const loadReports = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const response = await axios.get<IReport>("/api/reports/latests")
+        setReports(response.data)
+      } catch (e) {
+        console.error("Error loading reports.", e)
+        setError(e as string)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadReports();
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen">
+      {loading && !error && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="relative">
+              <Cloud className="h-16 w-16 text-blue-400 animate-bounce" />
+              <div className="absolute inset-0 blur-xl bg-blue-200 opacity-50 animate-pulse"></div>
+            </div>
+            <p className="mt-6 text-lg text-gray-600 font-medium">Loading snow reports...</p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      )}
+      {error && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+            <p className="text-red-600 font-medium">Error: {error}</p>
+          </div>
         </div>
-      </main>
+      )}
+      {!loading && reports && !error && (
+        <>
+        <div className="dark:bg-zinc-900 bg-background px-4 sm:px-6 lg:px-8 py-1 sm:py-4 shadow-md fixed w-full z-10 border-b border-neutral-200 dark:border-zinc-700">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold text-foreground">
+                New England Epic Pass Mountains
+              </h1>
+              <span className="text-xs text-gray-400">Updated {formatDate(reports.timestamp)}</span>
+            </div>
+            <div>
+              <button
+                className={`p-1 w-12 rounded-l-lg font-semibold cursor-pointer ${units === 'in' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                onClick={() => setUnits("in")}
+              >
+                in
+              </button>
+              <button
+                className={`p-1 w-12 rounded-r-lg font-semibold cursor-pointer ${units === 'cm' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                onClick={() => setUnits("cm")}
+              >
+                cm
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid gap-6 lg:gap-8 sm:pt-16 pt-8">
+            {Object.entries(reports.reports).map(([mountain, resortData]) => (
+              <ResortCard
+                key={mountain}
+                mountain={mountain}
+                resortData={resortData}
+                units={units}
+              />
+            ))}
+          </div>
+        </div>
+        </>
+      )}
     </div>
   );
 }
