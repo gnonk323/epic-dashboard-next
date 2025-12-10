@@ -2,8 +2,19 @@
 
 import { IResortData } from "@/types/Report";
 import { useState } from "react";
-import { MountainSnow, Snowflake, ChevronDown, ChevronRight, CloudSnow } from "lucide-react";
-import { deslugify, calculatePercentage } from "@/lib/utils";
+import { MountainSnow, Snowflake, ChevronDown, ChevronRight, CloudSnow, Calendar, Cloud } from "lucide-react";
+import { deslugify, calculatePercentage, formatDate } from "@/lib/utils";
+
+const weatherLinks = {
+  "stowe": "https://forecast.weather.gov/MapClick.php?lat=44.4653&lon=-72.6843",
+  "okemo": "https://forecast.weather.gov/MapClick.php?lat=43.3968&lon=-72.695",
+  "mount-snow": "https://forecast.weather.gov/MapClick.php?lat=42.9369&lon=-72.8091",
+  "mount-sunapee": "https://forecast.weather.gov/MapClick.php?lat=43.3212&lon=-72.0363",
+  "wildcat": "https://forecast.weather.gov/MapClick.php?lat=44.2889&lon=-71.1185",
+  "attitash": "https://forecast.weather.gov/MapClick.php?lat=44.0781&lon=-71.2822",
+  "crotched": "https://forecast.weather.gov/MapClick.php?lat=42.9877&lon=-71.8128",
+  "hunter": "https://forecast.weather.gov/MapClick.php?lat=42.2137&lon=-74.2193",
+}
 
 export default function ResortCard({ mountain, resortData, units }: { mountain: string, resortData: IResortData, units: "in" | "cm" }) {
   const [resortCommentsExpanded, setResortCommentsExpanded] = useState(false);
@@ -16,7 +27,7 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
             <MountainSnow className="h-6 w-6 text-white opacity-90" />
             <h2 className="text-2xl font-bold text-white">{deslugify(mountain)}</h2>
           </div>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border bg-white text-zinc-900 gap-2">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border dark:border-zinc-900 bg-white text-zinc-900 gap-2">
             <Snowflake className="h-4 w-4" />
             {resortData.snow_report.overall_conditions}
           </span>
@@ -92,6 +103,7 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
               </div>
             </div>
           </div>
+
           <div className="bg-linear-to-br from-white-50 to-neutral-50 dark:from-zinc-800 dark:to-zinc-900 rounded-xl p-5 border border-neutral-200 dark:border-zinc-500 mt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -116,6 +128,30 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 style={{ width: `${calculatePercentage(resortData.trails_status.trails.open, resortData.trails_status.trails.total)}%` }}
               />
             </div>
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
+          <div className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            <p>Updated {formatDate(resortData.snow_report.updated_at)}</p>
+          </div>
+          <div className="flex items-center gap-1">
+            <a
+              className="flex items-center gap-1 py-1 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors font-semibold cursor-pointer"
+              target="_blank"
+              href={weatherLinks[mountain as keyof typeof weatherLinks]}
+            >
+              <Cloud className="h-4 w-4" />
+              Weather
+            </a>
+            <a
+              className="flex items-center gap-1 py-1 px-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors font-semibold cursor-pointer"
+              target="_blank"
+              href={resortData.snow_report.source_url}
+            >
+              <MountainSnow className="h-4 w-4" />
+              Mountain
+            </a>
           </div>
         </div>
       </div>

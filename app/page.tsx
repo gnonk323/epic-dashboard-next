@@ -4,7 +4,7 @@ import { IReport } from "@/types/Report";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Cloud } from "lucide-react";
-import { formatDate, calculatePercentage, deslugify } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import ResortCard from "@/components/ResortCard";
 
 export default function Home() {
@@ -12,17 +12,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [units, setUnits] = useState<"in" | "cm">("in");
-
-  const weatherLinks = {
-    "stowe": "https://forecast.weather.gov/MapClick.php?lat=44.4653&lon=-72.6843",
-    "okemo": "https://forecast.weather.gov/MapClick.php?lat=43.3968&lon=-72.695",
-    "mount-snow": "https://forecast.weather.gov/MapClick.php?lat=42.9369&lon=-72.8091",
-    "mount-sunapee": "https://forecast.weather.gov/MapClick.php?lat=43.3212&lon=-72.0363",
-    "wildcat": "https://forecast.weather.gov/MapClick.php?lat=44.2889&lon=-71.1185",
-    "attitash": "https://forecast.weather.gov/MapClick.php?lat=44.0781&lon=-71.2822",
-    "crotched": "https://forecast.weather.gov/MapClick.php?lat=42.9877&lon=-71.8128",
-    "hunter": "https://forecast.weather.gov/MapClick.php?lat=42.2137&lon=-74.2193",
-  }
 
   useEffect(() => {
     const loadReports = async () => {
