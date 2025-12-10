@@ -11,22 +11,20 @@ import {
   Calendar,
   Cloud,
   ChartNoAxesColumn,
-  Thermometer, // <-- NEW: Icon for temperature
-  Wind,        // <-- NEW: Icon for wind
-  Droplet      // <-- NEW: Icon for precipitation
+  Thermometer,
+  Wind,
+  Droplet,
+  Sun
 } from "lucide-react";
 import { deslugify, calculatePercentage } from "@/lib/utils";
 
-// Helper function to map a short forecast string to an appropriate Lucide icon
-// Note: This is a simple, illustrative mapping. You may need a more robust system.
 const getWeatherIcon = (shortForecast: string) => {
   const forecast = shortForecast.toLowerCase();
   if (forecast.includes("snow") || forecast.includes("flurries")) {
     return <CloudSnow className="w-5 h-5 text-blue-500 shrink-0" />;
   }
-  if (forecast.includes("sunny") || forecast.includes("clear")) {
-    // Sun icon is not standard Lucide, using Cloud for consistency or find a suitable one
-    return <Cloud className="w-5 h-5 text-amber-500 shrink-0" />;
+  if (forecast.includes("sun") || forecast.includes("clear")) {
+    return <Sun className="w-5 h-5 text-amber-500 shrink-0" />;
   }
   if (forecast.includes("rain") || forecast.includes("showers")) {
     return <Droplet className="w-5 h-5 text-cyan-500 shrink-0" />;
@@ -34,7 +32,6 @@ const getWeatherIcon = (shortForecast: string) => {
   if (forecast.includes("windy")) {
     return <Wind className="w-5 h-5 text-gray-500 shrink-0" />;
   }
-  // Default to cloud for general or mostly cloudy conditions
   return <Cloud className="w-5 h-5 text-neutral-500 shrink-0" />;
 }
 
@@ -50,14 +47,10 @@ const weatherLinks = {
   "hunter": "https://forecast.weather.gov/MapClick.php?lat=42.2137&lon=-74.2193",
 }
 
-export default function ResortCard({ mountain, resortData, units }: { mountain: string, resortData: IResortData, units: "in" | "cm" }) {
+export default function ResortCard({ mountain, resortData }: { mountain: string, resortData: IResortData }) {
   const [resortCommentsExpanded, setResortCommentsExpanded] = useState(false);
   
-  // Extract the weather forecast periods, taking the first three
   const forecastPeriods = resortData.weather?.properties?.periods.slice(0, 3) || [];
-  
-  // Determine temperature unit based on snow units for consistency
-  const tempUnit = units === "in" ? "F" : "C"; 
 
   return (
     <div className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-200 dark:border-zinc-700">
@@ -67,7 +60,7 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
             <MountainSnow className="h-6 w-6 text-white opacity-90" />
             <h2 className="text-2xl font-bold text-white">{deslugify(mountain)}</h2>
           </div>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border dark:border-zinc-900 bg-white text-zinc-900 gap-2">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-white text-zinc-900 gap-2">
             <Snowflake className="h-4 w-4" />
             {resortData.snow_report.overall_conditions}
           </span>
@@ -102,8 +95,8 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 <span className="text-sm font-semibold">24 Hours</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">{units === "in" ? resortData.snow_report.metrics["24_hour"].in : resortData.snow_report.metrics["24_hour"].cm}</span>
-                <span className="text-sm text-gray-500 dark:text-zinc-400">{units}</span>
+                <span className="text-2xl font-bold">{resortData.snow_report.metrics["24_hour"].in}</span>
+                <span className="text-sm text-gray-500 dark:text-zinc-400">in</span>
               </div>
             </div>
             <div className="bg-linear-to-br from-white to-neutral-50 dark:from-zinc-800 dark:to-zinc-900 rounded-xl p-4 border border-neutral-200 dark:border-zinc-500 hover:border-blue-400 transition-all hover:shadow-md">
@@ -111,8 +104,8 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 <span className="text-sm font-semibold">48 Hours</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">{units === "in" ? resortData.snow_report.metrics["48_hour"].in : resortData.snow_report.metrics["48_hour"].cm}</span>
-                <span className="text-sm text-gray-500 dark:text-zinc-400">{units}</span>
+                <span className="text-2xl font-bold">{resortData.snow_report.metrics["48_hour"].in}</span>
+                <span className="text-sm text-gray-500 dark:text-zinc-400">in</span>
               </div>
             </div>
             <div className="bg-linear-to-br from-white to-neutral-50 dark:from-zinc-800 dark:to-zinc-900 rounded-xl p-4 border border-neutral-200 dark:border-zinc-500 hover:border-blue-400 transition-all hover:shadow-md">
@@ -120,8 +113,8 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 <span className="text-sm font-semibold">7 Days</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">{units === "in" ? resortData.snow_report.metrics["7_day"].in : resortData.snow_report.metrics["7_day"].cm}</span>
-                <span className="text-sm text-gray-500 dark:text-zinc-400">{units}</span>
+                <span className="text-2xl font-bold">{resortData.snow_report.metrics["7_day"].in}</span>
+                <span className="text-sm text-gray-500 dark:text-zinc-400">in</span>
               </div>
             </div>
             <div className="bg-linear-to-br from-white to-neutral-50 dark:from-zinc-800 dark:to-zinc-900 rounded-xl p-4 border border-neutral-200 dark:border-zinc-500 hover:border-blue-400 transition-all hover:shadow-md">
@@ -129,8 +122,8 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 <span className="text-sm font-semibold">Base Depth</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">{units === "in" ? resortData.snow_report.metrics.base_depth.in : resortData.snow_report.metrics.base_depth.cm}</span>
-                <span className="text-sm text-gray-500 dark:text-zinc-400">{units}</span>
+                <span className="text-2xl font-bold">{resortData.snow_report.metrics.base_depth.in}</span>
+                <span className="text-sm text-gray-500 dark:text-zinc-400">in</span>
               </div>
             </div>
             <div className="bg-linear-to-br from-white to-neutral-50 dark:from-zinc-800 dark:to-zinc-900 rounded-xl p-4 border border-neutral-200 dark:border-zinc-500 hover:border-blue-400 transition-all hover:shadow-md">
@@ -138,8 +131,8 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                 <span className="text-sm font-semibold">Season Total</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold">{units === "in" ? resortData.snow_report.metrics.season_total.in : resortData.snow_report.metrics.season_total.cm}</span>
-                <span className="text-sm text-gray-500 dark:text-zinc-400">{units}</span>
+                <span className="text-2xl font-bold">{resortData.snow_report.metrics.season_total.in}</span>
+                <span className="text-sm text-gray-500 dark:text-zinc-400">in</span>
               </div>
             </div>
           </div>
@@ -171,7 +164,6 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
           </div>
         </div>
         
-        {/* NEW WEATHER FORECAST SECTION */}
         <div className="border-b border-zinc-300 dark:border-zinc-700 pb-6 mb-6">
           <h3 className="flex items-center gap-2 font-semibold mb-6">
             <CloudSnow className="w-5 h-5 text-blue-500 shrink-0" />
@@ -190,15 +182,13 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                   </div>
                   
                   <div className="flex items-center justify-between gap-3">
-                    {/* Temperature and Icon */}
                     <div className="flex items-center gap-2">
                         <Thermometer className="w-5 h-5 text-red-500 shrink-0" />
                         <span className="text-xl font-bold">
-                          {period.temperature}°{tempUnit}
+                          {period.temperature}°{" "}{period.temperatureUnit}
                         </span>
                     </div>
 
-                    {/* Wind Speed and Direction */}
                     <div className="flex items-center gap-2 text-sm">
                       <Wind className="w-4 h-4 text-zinc-500 shrink-0" />
                       <span className="font-medium text-zinc-700 dark:text-zinc-300">
@@ -207,7 +197,6 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
                     </div>
                   </div>
 
-                  {/* Short Forecast Description */}
                   <div className="mt-3 flex items-start gap-3 p-3 bg-neutral-100 dark:bg-zinc-800 rounded-lg">
                     {getWeatherIcon(period.shortForecast)}
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-snug">
@@ -223,12 +212,11 @@ export default function ResortCard({ mountain, resortData, units }: { mountain: 
             </div>
           )}
         </div>
-        {/* END NEW WEATHER FORECAST SECTION */}
         
         <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
           <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            <p>Updated {resortData.snow_report.updated_at.toLocaleString()}</p>
+            <Calendar className="h-4 w-4 shrink-0" />
+            <p>Updated {new Date(resortData.snow_report.updated_at).toLocaleString()}</p>
           </div>
           <div className="flex items-center gap-1">
             <a

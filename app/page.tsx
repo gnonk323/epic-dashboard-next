@@ -10,7 +10,6 @@ export default function Home() {
   const [reports, setReports] = useState<IReport>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [units, setUnits] = useState<"in" | "cm">("in");
 
   useEffect(() => {
     const loadReports = async () => {
@@ -53,27 +52,11 @@ export default function Home() {
       {!loading && reports && !error && (
         <>
         <div className="dark:bg-zinc-900 bg-background px-4 sm:px-6 lg:px-8 py-1 sm:py-4 shadow-md fixed w-full z-10 border-b border-neutral-200 dark:border-zinc-700">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold text-foreground">
-                New England Epic Pass Mountains
-              </h1>
-              <span className="text-xs text-gray-400">Updated {reports.timestamp.toLocaleString()}</span>
-            </div>
-            <div>
-              <button
-                className={`p-1 w-12 rounded-l-lg font-semibold cursor-pointer ${units === 'in' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'}`}
-                onClick={() => setUnits("in")}
-              >
-                in
-              </button>
-              <button
-                className={`p-1 w-12 rounded-r-lg font-semibold cursor-pointer ${units === 'cm' ? 'bg-linear-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200 dark:bg-zinc-700'}`}
-                onClick={() => setUnits("cm")}
-              >
-                cm
-              </button>
-            </div>
+          <div className="flex flex-col">
+            <h1 className="text-xl font-bold text-foreground">
+              New England Epic Pass Mountains
+            </h1>
+            <span className="text-xs text-gray-400">Updated {new Date(reports.timestamp).toLocaleString()}</span>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -83,7 +66,6 @@ export default function Home() {
                 key={mountain}
                 mountain={mountain}
                 resortData={resortData}
-                units={units}
               />
             ))}
           </div>
