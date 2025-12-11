@@ -1,0 +1,42 @@
+[
+  {
+    "name": "stowe",
+    "snow_report_url": "https://www.stowe.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.stowe.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx"
+  },
+  {
+    "name": "okemo",
+    "snow_report_url": "https://www.okemo.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.okemo.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "mount-snow",
+    "snow_report_url": "https://www.mountsnow.com/the-mountain/mountain-conditions/weather-report.aspx",
+    "trails_status_url": "https://www.mountsnow.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "mount-sunapee",
+    "snow_report_url": "https://www.mountsunapee.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.mountsunapee.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "wildcat",
+    "snow_report_url": "https://www.skiwildcat.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.skiwildcat.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "attitash",
+    "snow_report_url": "https://www.attitash.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.attitash.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "crotched",
+    "snow_report_url": "https://www.crotchedmtn.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.crotchedmtn.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  },
+  {
+    "name": "hunter",
+    "snow_report_url": "https://www.huntermtn.com/the-mountain/mountain-conditions/snow-and-weather-report.aspx",
+    "trails_status_url": "https://www.huntermtn.com/the-mountain/mountain-conditions/lift-and-terrain-status.aspx"
+  }
+]
