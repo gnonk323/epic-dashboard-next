@@ -24,7 +24,7 @@ jobs:
       # install dependencies
       - name: Install dependencies
         run: |
-          cd scraper
+          cd web-scraper
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
