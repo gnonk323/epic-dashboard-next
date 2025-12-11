@@ -33,5 +33,5 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          cd scraper
+          cd web-scraper
           python main.py
